@@ -14,7 +14,10 @@ public class GameController : MonoBehaviour
         terrainZ = Terrain.activeTerrain.terrainData.bounds.size.z;
     }
 
-
+    private void Update()
+    {
+        MouseClicked();
+    }
 
     public void GeneratePlants()
     {
@@ -55,5 +58,40 @@ public class GameController : MonoBehaviour
     public void SetMode(int mode)
     {
         interactionMode = (InteractionMode)mode;
+    }
+
+    private void MouseClicked()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (interactionMode == InteractionMode.Add)
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Terrain.activeTerrain.gameObject.GetComponent<Collider>().Raycast(ray, out hit, Mathf.Infinity))
+                {
+                    Instantiate(plantPrefab, new Vector3(hit.point.x, Terrain.activeTerrain.SampleHeight(new Vector3(hit.point.x, 0, hit.point.z)), hit.point.z), Quaternion.identity);
+                }
+            }
+            else
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit, 500))
+                {
+                    if (hit.transform.gameObject.tag == "Plant")
+                    {
+                        if (interactionMode == InteractionMode.Remove)
+                        {
+                            Destroy(hit.transform.gameObject);
+                        }
+                        else if (interactionMode == InteractionMode.ToogleFire)
+                        {
+                            hit.transform.gameObject.GetComponent<PlantController>().SetFire();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

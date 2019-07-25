@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -36,8 +37,8 @@ public class UIController : MonoBehaviour
         Application.Quit();
     }
 
-    public void ModeChanged(int mode)
+    public void ModeChanged(Dropdown dropdown)
     {
-        gameController.SetMode(mode);
+        gameController.SetMode(dropdown.value);
     }
 }

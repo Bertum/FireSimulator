@@ -5,9 +5,11 @@ public class PlantController : MonoBehaviour
     private PlantStatus plantStatus;
     private float fireTimer;
     private float timeToBurnt = 10;
+    private GameController gameController;
 
     private void Awake()
     {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
         fireTimer = 0;
         plantStatus = PlantStatus.Base;
         SwitchColor();
