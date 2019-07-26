@@ -6,6 +6,8 @@ public class PlantController : MonoBehaviour
     private float fireTimer;
     private float timeToBurnt = 10;
     private GameController gameController;
+    public Vector3 windDirection;
+    public float windSpeed;
 
     private void Awake()
     {
@@ -19,6 +21,7 @@ public class PlantController : MonoBehaviour
     {
         CountTimer();
         CheckIfBurnt();
+        SetFireNearPlants();
     }
 
     private void CountTimer()
@@ -62,6 +65,36 @@ public class PlantController : MonoBehaviour
                 break;
             default:
                 break;
+        }
+    }
+
+    private void SetFireNearPlants()
+    {
+        if (plantStatus == PlantStatus.Burning)
+        {
+            RaycastHit hit;
+            Ray ray = new Ray(this.transform.position, new Vector3(windDirection.x, this.transform.position.y, windDirection.z));
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                if (hit.collider.gameObject.tag == "Plant")
+                {
+                    CheckIfBurn(hit.collider.gameObject);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// More wind more posibilities
+    /// </summary>
+    private void CheckIfBurn(GameObject plant)
+    {
+        var rnd = Random.Range(0, 100);
+        // if the number is less than the wind speed then burn
+        // higher speed more posibilities
+        if (rnd <= windSpeed)
+        {
+            plant.GetComponent<PlantController>().SetFire();
         }
     }
 }
